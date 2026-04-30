@@ -186,20 +186,20 @@ def get_valid_moves(board, row, col, is_player_turn=True):
             new_col = col + move[1]
             if 0 <= new_row < 8 and 0 <= new_col < 8:
                 if board[new_row][new_col] == "." or board[new_row][new_col].isupper() != piece.isupper():
-                    valid_moves.append((new_row,new_col))
+                    valid_moves.append((new_row, new_col))
 
     # King movement logic
     elif piece.lower() == 'k':
         king_moves = [
-            (1, 0), (1, 1), (1,-1), (-1 ,0),
-            (-1 ,1), (-1 ,-1), (0 ,1), (0 ,-1)
+            (1, 0), (1, 1), (1, -1), (-1, 0),
+            (-1, 1), (-1, -1), (0, 1), (0, -1)
         ]
         for move in king_moves:
             new_row = row + move[0]
             new_col = col + move[1]
             if 0 <= new_row < 8 and 0 <= new_col < 8:
                 if board[new_row][new_col] == "." or board[new_row][new_col].isupper() != piece.isupper():
-                    valid_moves.append((new_row,new_col))
+                    valid_moves.append((new_row, new_col))
 
     return valid_moves
 
@@ -219,30 +219,25 @@ def get_black_move(board):
         piece = board[start_row][start_col]
         if piece.islower():  # Only consider black pieces
             valid_moves = get_valid_moves(board, start_row, start_col, is_player_turn=False)
-            
+
             for end_row, end_col in valid_moves:
                 score = evaluate_move(board, start_row, start_col, end_row, end_col)
                 if score > best_score:
                     best_score = score
                     best_move = (start_row, start_col, end_row, end_col)
-    
+
     return best_move
 
 def evaluate_move(board, start_row, start_col, end_row, end_col):
-    # Implement evaluation criteria, for example:
-    # - Reward moves that capture opponent's pieces
-    # - Penalize moves that place the king in danger
     piece = board[start_row][start_col]
     target_piece = board[end_row][end_col]
-    
+
     score = 0
     if target_piece != '.':
         # Reward capturing an opponent's piece
         if (piece.islower() and target_piece.isupper()) or (piece.isupper() and target_piece.islower()):
             score += 10  # Arbitrary value for capturing an opponent's piece
-    
-    # Add other evaluation heuristics as needed
-    
+
     return score
 
 def draw_game_over_message(screen, winner):
@@ -250,13 +245,13 @@ def draw_game_over_message(screen, winner):
     panel_surface = pygame.Surface((WIDTH, 200))
     panel_surface.fill(PANEL_COLOR)
     panel_surface.set_alpha(200)
-    screen.blit(panel_surface, (0, HEIGHT//2 - 100))
+    screen.blit(panel_surface, (0, HEIGHT // 2 - 100))
 
     # Create and render "Game Over" text
     try:
         font_big = pygame.font.Font(None, 120)
         font_winner = pygame.font.Font(None, 90)
-    except:
+    except Exception:
         # Fallback to default font if custom font fails
         font_big = pygame.font.SysFont('arial', 120, bold=True)
         font_winner = pygame.font.SysFont('arial', 90, bold=True)
@@ -264,19 +259,19 @@ def draw_game_over_message(screen, winner):
     # Game Over text with shadow effect
     game_over_shadow = font_big.render("Game Over!", True, (0, 0, 0))
     game_over_text = font_big.render("Game Over!", True, RED_COLOR)
-    
+
     # Winner text with shadow effect
     winner_shadow = font_winner.render(f"{winner} Wins!", True, (0, 0, 0))
     winner_text = font_winner.render(f"{winner} Wins!", True, GOLD_COLOR)
 
     # Position the text
-    game_over_rect = game_over_text.get_rect(center=(WIDTH//2, HEIGHT//2 - 50))
-    winner_rect = winner_text.get_rect(center=(WIDTH//2, HEIGHT//2 + 30))
+    game_over_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
+    winner_rect = winner_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
 
     # Draw the shadow texts slightly offset
     screen.blit(game_over_shadow, (game_over_rect.x + 3, game_over_rect.y + 3))
     screen.blit(winner_shadow, (winner_rect.x + 3, winner_rect.y + 3))
-    
+
     # Draw the main texts
     screen.blit(game_over_text, game_over_rect)
     screen.blit(winner_text, winner_rect)
@@ -291,15 +286,15 @@ def main():
     running = True
     game_over = False
     winner = None
-    
+
     while running:
         draw_board(selected_square, valid_moves)
         draw_pieces(board)
-        
+
         # Display game over message if game is over
         if game_over:
             draw_game_over_message(screen, winner)
-        
+
         pygame.display.flip()
 
         for event in pygame.event.get():
@@ -308,7 +303,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN and not game_over:
                 pos = pygame.mouse.get_pos()
                 row, col = pos[1] // SQUARE_SIZE, pos[0] // SQUARE_SIZE
-                
+
                 if player_turn:  # White's turn (player)
                     if selected_square:
                         if (row, col) in valid_moves:
@@ -316,7 +311,7 @@ def main():
                             if board[row][col].lower() == 'k':
                                 game_over = True
                                 winner = "White"
-                            
+
                             # Make the move
                             board[row][col] = board[selected_square[0]][selected_square[1]]
                             board[selected_square[0]][selected_square[1]] = "."
@@ -331,17 +326,17 @@ def main():
                         if piece.isupper():  # Only select white pieces
                             selected_square = (row, col)
                             valid_moves = get_valid_moves(board, row, col, is_player_turn=True)
-                
+
                 elif not player_turn:  # Black's turn (AI)
                     black_move = get_black_move(board)
                     if black_move:
                         start_row, start_col, end_row, end_col = black_move
-                        
+
                         # Check if capturing a king
                         if board[end_row][end_col].lower() == 'k':
                             game_over = True
                             winner = "Black"
-                        
+
                         # Make the move
                         board[end_row][end_col] = board[start_row][start_col]
                         board[start_row][start_col] = "."
@@ -354,8 +349,4 @@ def main():
 
 # Run the game
 if __name__ == "__main__":
-<<<<<<< HEAD
     main()
-=======
-    main()
->>>>>>> 1f2cec354378ad665c1a2801ec974f153701cd18

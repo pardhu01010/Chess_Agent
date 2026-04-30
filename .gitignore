@@ -1,50 +1,52 @@
-# Python cache
+# =============================================================================
+# Chess Agent — .gitignore
+# =============================================================================
+
+# ── Python cache ──────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 
-# Virtual environment
+# ── Virtual environments ───────────────────────────────────────────────────────
 env/
 venv/
 .venv/
 
-# Environment variables
+# ── Environment variables ──────────────────────────────────────────────────────
 .env
+.env.*
 
-# VS Code settings
+# ── IDE / Editor settings ──────────────────────────────────────────────────────
 .vscode/
+.idea/
+*.suo
+*.user
 
-# Jupyter Notebook checkpoints (if any)
-.ipynb_checkpoints/
-
-# OS files
+# ── OS artifacts ───────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Logs
+# ── Logs ───────────────────────────────────────────────────────────────────────
 *.log
 
-# Model checkpoints (VERY IMPORTANT)
-*.pth
+# ── PyTorch model files ────────────────────────────────────────────────────────
+# Keep the final trained model but ignore intermediate checkpoints
+chess_model_checkpoint_*.pth
 
-# Training outputs
+# ── Training output ─────────────────────────────────────────────────────────── 
 training_progress.png
 
-# Large assets (optional if you don't want to push images)
-# assets/
-
-# Temporary files
+# ── Scratch / temp files ───────────────────────────────────────────────────────
 *.tmp
 *.temp
+*.bak
 
-# Build / dist
+# ── Build / distribution ───────────────────────────────────────────────────────
 build/
 dist/
 *.egg-info/
 
-# Git ignore itself backup (optional)
-*.bak
-.chess_agent.txt
-.chess_image.py
-.chess_board_image.txt
+# ── Jupyter Notebook checkpoints ───────────────────────────────────────────────
+.ipynb_checkpoints/
