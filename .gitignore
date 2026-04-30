@@ -45,3 +45,6 @@ dist/
 
 # Git ignore itself backup (optional)
 *.bak
+.chess_agent.txt
+.chess_image.py
+.chess_board_image.txt
