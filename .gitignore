@@ -34,6 +34,7 @@ desktop.ini
 # ── PyTorch model files ────────────────────────────────────────────────────────
 # Keep the final trained model but ignore intermediate checkpoints
 chess_model_checkpoint_*.pth
+chess_model_trained.pth
 
 # ── Training output ─────────────────────────────────────────────────────────── 
 training_progress.png
