@@ -7,8 +7,11 @@ import chess
 import torch
 import torch.nn as nn
 import torch.optim as optim
+<<<<<<< HEAD
 import time
 from datetime import timedelta
+=======
+>>>>>>> 1f2cec354378ad665c1a2801ec974f153701cd18
 
 # Step 1: Define the Chess Environment
 class ChessEnvironment:
@@ -109,6 +112,7 @@ class DQNAgent:
         self.optimizer = optimizer
         self.gamma = gamma
         self.epsilon = 1.0
+<<<<<<< HEAD
         self.epsilon_min = 0.01  # Lower minimum epsilon for better exploitation
         self.epsilon_decay = 0.9999  # Slower decay rate
         self.training_history = {
@@ -117,6 +121,10 @@ class DQNAgent:
             'draws': 0,
             'avg_moves': []
         }
+=======
+        self.epsilon_min = 0.1
+        self.epsilon_decay = 0.995
+>>>>>>> 1f2cec354378ad665c1a2801ec974f153701cd18
 
     def get_move(self, state, legal_moves):
         state_tensor = fen_to_tensor(state)
@@ -140,6 +148,7 @@ class DQNAgent:
             self.epsilon *= self.epsilon_decay
 
 # Training function with model saving
+<<<<<<< HEAD
 def train_agent(episodes=10000, show_gui=False):
     pygame.init()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -287,6 +296,46 @@ def train_agent(episodes=10000, show_gui=False):
 
     if show_gui:
         pygame.quit()
+=======
+def train_agent(episodes=250):
+    pygame.init()
+    gui = ChessGUI()
+    model = ChessModel()
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    agent = DQNAgent(model, optimizer)
+    game_env = ChessEnvironment()
+    max_moves = 200
+
+    for episode in range(episodes):
+        state = game_env.reset()
+        done = False
+        move_count = 0
+
+        while not done and move_count < max_moves:
+            legal_moves = game_env.get_legal_moves()
+            if legal_moves:
+                action = agent.get_move(state, legal_moves)
+                print(f"Episode {episode + 1}, Move {move_count + 1}: {action}")
+
+                next_state, reward, done = game_env.step(action)
+                print(f"Reward: {reward}, Game Over: {done}")
+
+                state = next_state
+                move_count += 1
+
+                if move_count % 5 == 0:  # Redraw GUI every 5 moves to reduce overhead
+                    gui.draw_board(game_env.board)
+
+            agent.update_epsilon()  # Update exploration factor once per episode
+
+        print(f"Episode {episode + 1} completed with {move_count} moves. Epsilon: {agent.epsilon:.4f}")
+
+    # Save trained model
+    torch.save(model.state_dict(), "chess_model_trained.pth")
+    print("Model saved successfully as 'chess_model_trained.pth'")
+
+    pygame.quit()
+>>>>>>> 1f2cec354378ad665c1a2801ec974f153701cd18
 
 # Load trained model
 def load_trained_model(model_path="chess_model_trained.pth"):
@@ -296,7 +345,12 @@ def load_trained_model(model_path="chess_model_trained.pth"):
     print("Trained model loaded successfully!")
     return model
 
+<<<<<<< HEAD
 # Run training without GUI for faster performance
 if __name__ == "__main__":
     # You can choose to show or hide GUI during training
     train_agent(episodes=10000, show_gui=False)  # Set show_gui=True if you want to see the board during training
+=======
+# Run training
+train_agent()
+>>>>>>> 1f2cec354378ad665c1a2801ec974f153701cd18
