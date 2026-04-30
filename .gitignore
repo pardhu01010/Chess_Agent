@@ -43,6 +43,7 @@ training_progress.png
 *.tmp
 *.temp
 *.bak
+.txt
 
 # ── Build / distribution ───────────────────────────────────────────────────────
 build/
